@@ -1,6 +1,6 @@
 # Micro Module Definition (MMD)
 
-MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar define/require interface. While its API is modeled after AMD and CommonJS, MMD is neither. Its goals are much *smaller*. Consider how the big-kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") or [curl.js](https://github.com/cujojs/curl "curl.js") can be overkill for a tiny (< 5kb) web application contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those micro-applications without adding excessive weight. MMD is built and tested to be small, simple, and robust while only providing the bare minimum.
+MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar define/require interface. While its API is modeled after AMD and CommonJS, MMD is neither. Its goals are much *smaller*. The big kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") and [curl.js](https://github.com/cujojs/curl "curl.js") can be overkill for a tiny (< 5kb) web application contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those micro applications with little overhead weight. MMD is built and tested to be small, simple, and robust while only providing the bare minimum.
 
 The `mmd` API has only two methods: `define` and `require`.
 
