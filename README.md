@@ -111,7 +111,7 @@ The complete usage of `require` allows:
 
 Which came first, the chicken or the egg? MMD doesn't care to figure it out, so throws an exception when a circular reference is required. Avoid circular references; you should probably be rethinking your organization anyway if you encounter this problem.
 
-## Go global
+## Go Global
 
 MMD is designed to be small and unimposing; consider copying and pasting the minified MMD script directly into your application scope rather than including a separate script file. The `mmd` namespace variable will be local to the scope in which you place it.
 
