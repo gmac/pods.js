@@ -1,6 +1,6 @@
 # Micro Module Definition (MMD)
 
-MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar define/require interface. While AMD is great, even the big kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") and [curl.js](https://github.com/cujojs/curl "curl.js") can sometimes be overkill for tiny (< 5kb) web applications contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those micro applications without adding excessive weight. MMD is built and tested to be small, simple, and robust.
+MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar define/require interface. However, let's be clear... MMD !== AMD. While AMD is great, even the big kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") and [curl.js](https://github.com/cujojs/curl "curl.js") can be overkill for a tiny (< 5kb) web application contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those micro applications without adding excess weight. MMD is built and tested to be small, simple, and robust without providing any more than a bare minimum.
 
 The `mmd` API has only two methods: `define` and `require`.
 
@@ -83,7 +83,7 @@ The `require` method builds/accesses a module or collection of modules. Modules 
 	var module = mmd.require( ["moduleId"], callbackFunction? );
 
 - `["moduleId"]` : *Required*. The string identifier of a single module, OR an array of module ids.
-- `callbackFunction?` : *Optional*. Callback function into which the required modules are injected. Provide mapped argument names.
+- `callbackFunction?` : *Optional*. Callback function into which the required modules are injected. Provide mapped arguments.
 - `return` : A single module is returned when a single id string is required; an array of modules is returned when an array of module ids are required.
 
 The complete usage of `require` allows:
@@ -104,7 +104,7 @@ The complete usage of `require` allows:
 		// do stuff.
 	});
 	
-	// 5) OR, all of the above... return and inject one or more modules with a single require call.
+	// 5) OR, do all of the above... return AND inject one or more modules with a single require call.
 	var returned = mmd.require(['module1', 'module2'], function( mod1, mod2 ) {
 		// do stuff.
 	});
@@ -115,7 +115,7 @@ Which came first, the chicken or the egg? MMD doesn't care to figure it out, so 
 
 MMD is designed to be small and unimposing; consider copying and pasting the minified MMD script directly into your application scope rather than including a separate script file. The `mmd` namespace variable will be local to the scope in which you place it.
 
-However, if you're used to AMD and would prefer calling define/require as global methods, simply assign global references to the MMD methods, and you're off to the races...
+However, if you'd prefer the AMD-style of having define/require as global methods, simply assign global references to the MMD methods, and you're off to the races...
 
 	// Assign global references (at your own risk!)
 	window.define = mmd.define;
@@ -125,4 +125,4 @@ However, if you're used to AMD and would prefer calling define/require as global
 	define("demo", function() {});
 	require("demo");
 
-Please be a responsible web citizen... make sure you don't hijack another framework's define/require methods.
+Please be a responsible web citizen... make sure you don't hijack another framework's define/require methods!
