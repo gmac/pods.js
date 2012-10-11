@@ -1,6 +1,6 @@
 # Micro Module Definition (MMD)
 
-MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar `define`/`require` interface. While AMD is awesome, sometimes the big kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") and [curl.js](https://github.com/cujojs/curl "curl.js") can still be overkill for tiny (<5kb) web applications contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those peanut apps without adding excessive weight. It's built and tested to be small, simple, and robust.
+MMD is a tiny (0.6kb / 0.4kb-gzipped) synchronous module definition and dependency management framework, built around a familiar define/require interface. While AMD is great, even the big kid frameworks such as [Require.js](http://requirejs.org/ "Require.js") and [curl.js](https://github.com/cujojs/curl "curl.js") can sometimes be overkill for tiny (< 5kb) web applications contained in a single script file. MMD is designed to provide module definition, deferred parsing, and dependency injection for those micro applications without adding excessive weight. MMD is built and tested to be small, simple, and robust.
 
 The `mmd` API has only two methods: `define` and `require`.
 
@@ -10,21 +10,23 @@ The `define` method creates a module definition.
 
 	mmd.define( "moduleId", [dependencies]?, factoryFunction );
 
-* `"moduleId"` : *Required*. Unique string identifier for this module.
-* `[dependencies]?` : *Optional*. Array of dependency module id's to be required and injected into the module's scope.
-* `factoryFunction` : *Required*. Function used to build the module. This function should provide arguments mapped to the module's dependencies, and return the constructed module export.
+- `"moduleId"` : *Required*. Unique string identifier for this module.
+- `[dependencies]?` : *Optional*. Array of dependency module ids to be required and injected into the module's scope.
+- `factoryFunction` : *Required*. Function used to build the module. This function should provide arguments mapped to the module's dependencies, and return the constructed module export.
 
-	// Define a module without dependencies.
+The complete usage of `define` allows:
+
+	// 1) Define a module without dependencies.
 	mmd.define("module1", function() {
 		return {};
 	});
 	
-	// Define a module with a single dependency.
+	// 2) Define a module with a single dependency.
 	mmd.define("module2", ["module1"], function( mod1 ) {
 		return {};
 	});
 	
-	// Define a module with multiple dependencies.
+	// 3) Define a module with multiple dependencies.
 	mmd.define("main", ["module1", "module2"], function( mod1, mod2 ) {
 		return {};
 	});
@@ -32,7 +34,7 @@ The `define` method creates a module definition.
 	// Require a module to load it...
 	mmd.require("main");
 	
-While listing module dependencies, you may include `"mmd"` as an identifier to have MMD provide a reference to itself. This is handy for including a local reference to MMD within a module. While a module can technically reference MMD through the scope chain, this local reference promotes encapsulation.
+While listing module dependencies, you may include `"mmd"` as an identifier to have MMD provide a reference to itself. This is handy for including a local reference to MMD within an encapsulated module scope. While a module can *technically* reference MMD through the scope chain, local references are tidy.
 
 	// Define a module without dependencies.
 	mmd.define("demo", function() {
@@ -74,9 +76,9 @@ The `require` method gets a module or collection of modules. Required modules ar
 
 	var module = mmd.require( ["moduleId"], callbackFunction? );
 
-- `["moduleId"]` : *Required*. The string identifier of a single module, OR an array of module id's.
-- `callbackFunction?` : *Optional*. Callback function into which the required modules are injected. Provide argument names mapped to the required modules.
-- `return` : A single module is returned when 
+- `["moduleId"]` : *Required*. The string identifier of a single module, OR an array of module ids.
+- `callbackFunction?` : *Optional*. Callback function into which the required modules are injected. Provide mapped argument names.
+- `return` : A single module is returned when a single id string is required; an array of modules is returned when an array of module ids are required.
 
 The complete usage of `require` allows:
 	
@@ -88,7 +90,7 @@ The complete usage of `require` allows:
 		// do stuff.
 	});
 	
-	// Return an array of modules mapped to a list of required id's.
+	// Return an array of modules mapped to a list of required ids.
 	var moduleArray = mmd.require(['module1', 'module2']);
 	
 	// Inject a collection of modules as arguments of a callback function.
@@ -105,9 +107,9 @@ Which came first, the chicken or the egg? MMD doesn't care to figure it out, so 
 
 ## Go global
 
-MMD is designed to be small and unimposing; consider copying and pasting the minified MMD script directly into your application scope rather than including a separate script. The `mmd` namespace variable will be local to the scope in which you place it.
+MMD is designed to be small and unimposing; consider copying and pasting the minified MMD script directly into your application scope rather than including a separate script file. The `mmd` namespace variable will be local to the scope in which you place it.
 
-However, if you're used to AMD and would prefer calling define/require without the MMD namespace, simply assign global reference to the MMD methods and you're off to the races...
+However, if you're used to AMD and would prefer calling define/require as global methods, simply assign global references to the MMD methods, and you're off to the races...
 
 	// Assign global references (at your own risk!)
 	window.define = mmd.define;
