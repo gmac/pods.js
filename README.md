@@ -36,36 +36,42 @@ The complete usage of `define` allows:
 	
 While listing module dependencies, you may include `"mmd"` as an identifier to have MMD provide a reference to itself. This is handy for including a local reference to MMD within an encapsulated module scope. While a module can *technically* reference MMD through the scope chain, local references keep things tidy.
 
-	// Define a module without dependencies.
 	mmd.define("demo", function() {
 		return {};
 	});
 	
+	// Require "mmd" as a local resource, then use it to require other modules.
 	mmd.define("main", ["mmd"] function( mmd ) {
 		if ( window.isDemo ) {
 			mmd.require( "demo" );
 		}
 	});
 	
-Modules may be defined in any order, however, all definitions should precede your first `require` call. A good practice is to define a `"main"` module for launching your application, and then require `"main"` as your last line of code. For example, here's a simple modular application:
+	mmd.require("main");
+	
+Modules may be defined in any order, however, all `define` calls should precede your first `require` call. A good practice is to define a `"main"` module for launching your application, and then require `"main"` as your final line of code. For example, here's a simple modular application pattern:
 
-	// Create an application scope...
+	// 1) Create an application scope...
 	(function() {
 		"use strict";
 		
-		// Define all application modules...
-		mmd.define("demo", function() {
+		// 2) Define all application modules...
+		mmd.define("module1", function() {
 			return {};
 		});
 		
-		// Define a "main" module to launch your application...
+		mmd.define("module2", function() {
+			return {};
+		});
+		
+		// 3) Define a "main" module for bootstrapping your application...
 		mmd.define("main", ["mmd"] function( mmd ) {
-			if ( window.isDemo ) {
-				mmd.require( "demo" );
+			if ( window.someCondition ) {
+				mmd.require( ["module1", "module2"] );
 			}
 		});
 		
-		// Require "main" to start your application.
+		// 4) Require "main" to run your application.
 		mmd.require("main");
 	}());
 
