@@ -65,7 +65,7 @@ Modules may be defined in any order, however, all `define` calls should precede 
 		});
 		
 		// 3) Define a "main" module for bootstrapping your application...
-		mmd.define("main", ["mmd"] function( mmd ) {
+		mmd.define("main", ["mmd"], function( mmd ) {
 			if ( window.someCondition ) {
 				mmd.require( ["module1", "module2"] );
 			}
