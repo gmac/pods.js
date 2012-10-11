@@ -27,24 +27,26 @@ var mmd = (function() {
 				f: factory
 			};
 		},
-		require: function( dependencies, callback ) {
-			var directRef = !(dependencies instanceof Array),
+		require: function( req, callback ) {
+			var single = !(req instanceof Array),
+				self = this,
+				nil = null,
 				id,
 				mod,
 				i;
 		
 			// Wrap a single dependency definition in an array.
-			if (directRef) dependencies = [dependencies];
+			if (single) req = [ req ];
 		
-			for ( i = 0; i < dependencies.length; i++ ) {
-				id = dependencies[i];
+			for ( i = 0; i < req.length; i++ ) {
+				id = req[i];
 				
 				if (id === 'mmd') {
 					// MMD framework reference:
 					// Populate with self.
-					dependencies[ i ] = this;
+					req[ i ] = self;
 					
-				} else if (modules.hasOwnProperty( id )) {
+				} else if (self.hasOwnProperty.call( modules, id )) {
 					// Known module reference:
 					// Pull module definition from key table.
 					mod = modules[ id ];
@@ -60,14 +62,14 @@ var mmd = (function() {
 						mod.p = 1;
 
 						// Run factory function with recursive require call to fetch dependencies.
-						mod.e = mod.f.apply(null, this.require(mod.d));
+						mod.e = mod.f.apply(nil, self.require(mod.d));
 
 						// Release module from the active path.
 						mod.p = 0;
 					}
 
 					// Replace dependency reference with the resolved module.
-					dependencies[ i ] = mod.e;
+					req[ i ] = mod.e;
 					
 				} else {
 					
@@ -78,11 +80,11 @@ var mmd = (function() {
 	
 			// If a callback function was provided,
 			// Inject dependency array into the callback.
-			if (callback && callback.apply) callback.apply(null, dependencies);
+			if (callback && callback.apply) callback.apply(nil, req);
 		
 			// If directly referenced by ID, return module.
 			// otherwise, return array of all required modules.
-			return directRef ? dependencies[0] : dependencies;
+			return single ? req[0] : req;
 		}
 	};
 }());
