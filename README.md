@@ -78,7 +78,7 @@ Modules may be defined in any order, however, all `define` calls should precede 
 
 ## require()
 
-The `require` method gets a module or collection of modules. Required modules are built with their dependencies, then returned AND injected into an optional callback.
+The `require` method builds/accesses a module or collection of modules. Modules and their dependencies are built the first time they are required. Built modules are returned by the `require` method, *and* injected into an optional callback.
 
 	var module = mmd.require( ["moduleId"], callbackFunction? );
 
