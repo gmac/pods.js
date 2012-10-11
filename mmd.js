@@ -9,10 +9,9 @@ var mmd = (function() {
 	return {
 		define: function() {
 			var args = arguments,
-				i,
-				getArgument = function( type ) {
-					for (i = 0; i < args.length; i++) {
-						if (typeof(args[i]) === type) return args[i];
+				getArgument = function( type, i ) {
+					for ( i = 0; i < args.length; i++ ) {
+						if ( typeof(args[i]) === type ) return args[i];
 					}
 				},
 				id = getArgument('string'),
