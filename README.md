@@ -18,7 +18,7 @@ The complete usage of `define` allows:
 
 	// 1) Define a module without dependencies.
 	mmd.define("module1", function() {
-		return {};
+		return {}; // << module export object.
 	});
 	
 	// 2) Define a module with a single dependency.
@@ -34,7 +34,7 @@ The complete usage of `define` allows:
 	// Require a module to load it...
 	mmd.require("main");
 	
-While listing module dependencies, you may include `"mmd"` as an identifier to have MMD provide a reference to itself. This is handy for including a local reference to MMD within an encapsulated module scope. While a module can *technically* reference MMD through the scope chain, local references are tidy.
+While listing module dependencies, you may include `"mmd"` as an identifier to have MMD provide a reference to itself. This is handy for including a local reference to MMD within an encapsulated module scope. While a module can *technically* reference MMD through the scope chain, local references keep things tidy.
 
 	// Define a module without dependencies.
 	mmd.define("demo", function() {
@@ -82,23 +82,23 @@ The `require` method gets a module or collection of modules. Required modules ar
 
 The complete usage of `require` allows:
 	
-	// Return a single module by direct id reference.
+	// 1) Return a single module by direct id reference.
 	var module = mmd.require('module1');
 	
-	// Inject a single module as an argument of a callback function.
+	// 2) Inject a single module as an argument of a callback function.
 	mmd.require('module1', function( mod1 ) {
 		// do stuff.
 	});
 	
-	// Return an array of modules mapped to a list of required ids.
+	// 3) Return an array of modules mapped to a list of required ids.
 	var moduleArray = mmd.require(['module1', 'module2']);
 	
-	// Inject a collection of modules as arguments of a callback function.
+	// 4) Inject a collection of modules as arguments of a callback function.
 	mmd.require(['module1', 'module2'], function( mod1, mod2 ) {
 		// do stuff.
 	});
 	
-	// OR, all of the above... return and inject one or more modules with a single require call.
+	// 5) OR, all of the above... return and inject one or more modules with a single require call.
 	var returned = mmd.require(['module1', 'module2'], function( mod1, mod2 ) {
 		// do stuff.
 	});
