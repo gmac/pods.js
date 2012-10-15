@@ -3,20 +3,24 @@
 //	(c) 2012 Greg MacWilliam, Threespot.
 //	Freely distributed under the MIT license.
 
-var mmd = (function() {
-	var modules = {};
+var mmd = (function(modules, api) {
+	modules = {};
 	
-	return {
+	return api = {
+		// Defines a new module.
+		// @param string-id
+		// @param array-dependencies?
+		// @param function-factory
 		define: function() {
-			var args = arguments,
-				getArgument = function( type, i ) {
-					for ( i = 0; i < args.length; i++ ) {
-						if ( typeof(args[i]) === type ) return args[i];
+			var definition = arguments,
+				getParam = function( type, i ) {
+					for ( i = 0; i < definition.length; i++ ) {
+						if ( typeof(definition[i]) === type ) return definition[i];
 					}
 				},
-				id = getArgument('string'),
-				dependencies = getArgument('object'),
-				factory = getArgument('function');
+				id = getParam('string'),
+				dependencies = getParam('object'),
+				factory = getParam('function');
 	
 			// Error if a name or factory were not provided.
 			if (!id || !factory) throw('invalid definition');
@@ -27,6 +31,9 @@ var mmd = (function() {
 				f: factory
 			};
 		},
+		// Requires a module. This fetches the module and all of its dependencies.
+		// @param string|array-moduleId
+		// @param function-callback
 		require: function( req, callback ) {
 			var single = !(req instanceof Array),
 				self = this,
@@ -44,7 +51,7 @@ var mmd = (function() {
 				if (id === 'mmd') {
 					// MMD framework reference:
 					// Populate with self.
-					req[ i ] = self;
+					req[ i ] = api;
 					
 				} else if (self.hasOwnProperty.call( modules, id )) {
 					// Known module reference:
