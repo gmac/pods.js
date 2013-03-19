@@ -53,7 +53,7 @@ var mmd = (function(modules, api) {
 					// Populate with self.
 					req[ i ] = api;
 					
-				} else if (self.hasOwnProperty.call( modules, id )) {
+				} else if (Object.prototype.hasOwnProperty.call( modules, id )) {
 					// Known module reference:
 					// Pull module definition from key table.
 					mod = modules[ id ];
