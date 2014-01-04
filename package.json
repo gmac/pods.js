@@ -1,0 +1,20 @@
+{
+  "name": "micro-module-definition",
+  "version": "1.0.0",
+  "description": "Tiny synchronous modules",
+  "main": "mmd.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gmac/micro-module-definition.git"
+  },
+  "keywords": [
+    "module"
+  ],
+  "author": "Greg MacWilliam",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "6421505f6489c3cefc85e73c5849592460f9f446"
+}
