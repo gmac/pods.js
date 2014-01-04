@@ -1,7 +1,7 @@
 {
-  "name": "micro-module-definition",
+  "name": "mmd",
   "version": "1.0.0",
-  "description": "Tiny synchronous modules",
+  "description": "Micro Module Definition",
   "main": "mmd.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,5 +16,9 @@
   "author": "Greg MacWilliam",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "6421505f6489c3cefc85e73c5849592460f9f446"
+  "gitHead": "6421505f6489c3cefc85e73c5849592460f9f446",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-uglify": "~0.2.7"
+  }
 }
