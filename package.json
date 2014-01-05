@@ -1,8 +1,8 @@
 {
-  "name": "mmd",
-  "version": "1.0.0",
-  "description": "Micro Module Definition",
-  "main": "mmd.js",
+  "name": "pods",
+  "version": "2.0.0-beta",
+  "description": "Tiny managers for module definition and dependency management.",
+  "main": "pods.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,9 @@
     "url": "git://github.com/gmac/micro-module-definition.git"
   },
   "keywords": [
-    "module"
+    "module",
+	"dependency",
+	"management"
   ],
   "author": "Greg MacWilliam",
   "license": "MIT",
@@ -19,6 +21,10 @@
   "gitHead": "6421505f6489c3cefc85e73c5849592460f9f446",
   "devDependencies": {
     "grunt": "~0.4.2",
-    "grunt-contrib-uglify": "~0.2.7"
+    "grunt-contrib-uglify": "~0.2.7",
+    "mocha": "~1.16.2",
+    "chai": "~1.8.1",
+    "underscore": "~1.5.2",
+    "sinon": "~1.7.3"
   }
 }

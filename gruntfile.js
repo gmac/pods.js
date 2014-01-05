@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	  pkg: grunt.file.readJSON('package.json'),
 		uglify: {
 			options: {
-				banner: '// mmd.js <%= pkg.version %>\n// (c) 2011-2014 Greg MacWilliam\n// Freely distributed under the MIT license\n// Docs: github.com/gmac/micro-module-definition\n'
+				banner: '// <%= pkg.name %>.js <%= pkg.version %>\n// (c) 2012-2014 Greg MacWilliam\n// Freely distributed under the MIT license\n// Docs: github.com/gmac/micro-module-definition\n'
 			},
 			root: {
 				src: '<%= pkg.name %>.js',
