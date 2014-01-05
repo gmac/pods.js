@@ -1,6 +1,6 @@
 {
   "name": "pods",
-  "version": "2.0.0-beta",
+  "version": "2.0.0",
   "description": "Tiny managers for module definition and dependency management.",
   "main": "pods.js",
   "scripts": {
