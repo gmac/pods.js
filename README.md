@@ -41,7 +41,7 @@ p.define("module", {data: "hello world"});
 
 // 2) Define a module with a factory function.
 p.define("module1", function() {
-	return {}; // << module export object.
+	return {};
 });
 
 // 3) Define a module with a single dependency and factory function.
@@ -84,41 +84,40 @@ Modules may be defined in any order, however, all `define` calls should precede 
 		return {};
 	});
 	
-	// 3) Require components needed to launch the application...
-	p.require(["module1", "module2"], function( mod1, mod2 ) {
+	// 3) Define a "main" module used to launch your app...
+	p.define("main", ["module1", "module2"], function( mod1, mod2 ) {
 		// Launch application!
 	});
+	
+	// 4) Require "main"...
+	p.require("main");
 }());
 ```
 
 ## declare()
 
-The `declare` method is a convenient way to quickly define one or more object literals. When using `declare`, functions will be treated as export objects rather than factory functions. Use this method to safely declare third-party libraries as defined resources.
+The `declare` method is a convenient way to quickly define one or more object literals. When using `declare`, functions will be treated as export objects rather than as factory functions. Use this method to safely declare third-party libraries as managed modules.
 
 ```javascript
-Pod.declare( exportsMap );
-// OR:
 Pod.declare( "moduleId", exports );
+// OR:
+Pod.declare( exportsMap );
 ```
 
-- `exportsMap` : *Required*. An object with key-value pairs mapping multiple module ids to their related export objects.
-- `"moduleId"` : *Required*. Unique string identifier for the declared module.
-- `exports` : *Required*. An export object for the module. The provided object will be set as the module's definitive export value; functions provided as the export will be preserved rather than being used as the module's factory function.
+- `"moduleId"` : Unique string identifier for the declared module.
+- `exports` : An export object for the module. The provided object will be set as the module's definitive export value; if a function is provided as the export, it will be preserved rather than being used as the module's factory.
+- `exportsMap` : An object with key-value pairs mapping multiple module ids to their related exports.
 
 The complete usage of `declare` allows:
 
 ```javascript
 var p = new Pod();
 
-// 1) Declare any object type as a module export.
-p.declare("message", "Hello World!");
-p.declare("data", {});
-
-// 2) Safely declare functions/libraries as module exports.
+// 1) Safely declare any object type (including functions/libraries) as module exports.
 // (note that the root jQuery object is a *function*...)
 p.declare("jquery", $);
 
-// 3) Declare multiple exports as a map of key-value pairs.
+// 2) Declare multiple exports as a map of key-value pairs.
 p.declare({
 	"backbone": Backbone,
 	"jquery": $,
@@ -126,14 +125,14 @@ p.declare({
 });
 ```
 
-Why `declare` third-party libraries rather than using `define`? jQuery is a great example: the root jQuery object is actually a function. In order to `define` jQuery, we'd need to wrap it in a factory function that would export it. The `declare` method does this for us, like so:
+Why `declare` third-party libraries rather than using `define`? jQuery is a great example: the root jQuery object is actually a function. In order to define jQuery, we'd need to wrap it in a factory function to safely export it. The `declare` method does this for us, like so:
 
 ```javascript
 Pod.define("jquery", function() {
 	return $;
 });
 
-// Is identical to...
+// is identical to...
 
 Pod.declare("jquery", $);
 ```
@@ -154,6 +153,8 @@ The complete usage of `require` allows:
 
 ```javascript
 var p = new Pod();
+p.define('module1', {});
+p.define('module2', {});
 
 // 1) Return a single module by direct id reference.
 var module = p.require('module1');
@@ -177,4 +178,4 @@ var moduleArray = p.require(['module1', 'module2'], function( mod1, mod2 ) {
 });
 ```
 
-Which came first, the chicken or the egg? Pod.js doesn't care to figure it out, so throws an exception when a circular reference is required. Avoid circular references; you should probably be rethinking your organization anyway if you encounter this problem.
+Which came first, the chicken or the egg? Pods do not care to figure it out, so they'll throw an exception when a circular reference is required. Avoid circular references; you should be rethinking your organization anyway if you encounter this problem.
