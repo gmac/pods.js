@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gmac/micro-module-definition.git"
+    "url": "git://github.com/gmac/pods.js.git"
   },
   "keywords": [
     "module",
