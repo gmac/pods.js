@@ -1,17 +1,19 @@
-# Pod.js (formerly Micro Module Definition)
+# Pods.js
 
-Pod.js is a tiny synchronous module definition and dependency management library, built around a familiar define/require interface. Pods are designed to provide a light-weight manager for organizing collections of related module components. Pods are a great way to break up a large compiled application codebase into managed modules. The synchronous nature of Pods also makes their benefits orthogonal to that of an AMD system such as RequireJS; it can still be useful to break down large AMD application modules into locally-scoped component clusters.
+Pods.js is a tiny synchronous module definition and dependency management library, built around a familiar define/require interface. Pods are designed to provide a light-weight manager for organizing collections of related module components. Pods are a great way to break up a large compiled application codebase into managed modules. The synchronous nature of Pods also makes their benefits orthogonal to that of an AMD system such as RequireJS; it can still be useful to break down large AMD application modules into locally-scoped component clusters.
 
-The `Pod` API has three methods: `define`, `declare`, and `require`. Pod objects may be instanced; each instance will manage its own collection of modules. Modules may also be managed through the static `Pod` object.
+The `Pod` API has three methods: `define`, `declare`, and `require`. Pods may be instanced, each instance will manage its own collection of modules. Modules may also be managed through the static `Pod` interface.
 
 ```javascript
-// Manage using a pod instance:
-var myPod = new Pod();
-myPod.define("module", {});
-myPod.require("module");
+// Manage using constructed pod instances:
+var p = new Pod();
+p.define("module", {});
+p.declare("jquery", $);
+p.require("module");
 
-// Manage as a static library interface:
+// Manage through the static library instance:
 Pod.define("module", {});
+Pod.declare("jquery", $);
 Pod.require("module");
 ```
 
@@ -32,26 +34,28 @@ Pod.define( "moduleId", [dependencies]?, exports );
 The complete usage of `define` allows:
 
 ```javascript
+var p = new Pod();
+
 // 1) Define a module with a plain exports object.
-Pod.define("module", {data: "hello world"});
+p.define("module", {data: "hello world"});
 
 // 2) Define a module with a factory function.
-Pod.define("module1", function() {
+p.define("module1", function() {
 	return {}; // << module export object.
 });
 
 // 3) Define a module with a single dependency and factory function.
-Pod.define("module2", ["module1"], function( mod1 ) {
+p.define("module2", ["module1"], function( mod1 ) {
 	return {};
 });
 
 // 4) Define a module with multiple dependencies and a factory function.
-Pod.define("main", ["module1", "module2"], function( mod1, mod2 ) {
+p.define("main", ["module1", "module2"], function( mod1, mod2 ) {
 	return {};
 });
 
 // Require a module to load it...
-Pod.require("main");
+p.require("main");
 ```
 
 While listing module dependencies, you may include `"pod"` as an identifier to have the managing Pod instance provide a reference to itself:
@@ -67,66 +71,62 @@ myPod.require(["pod"], function(pod) {
 Modules may be defined in any order, however, all `define` calls should precede your first `require` call. A good practice is to define a `"main"` module for launching your application, and then require `"main"` as your final line of code. For example, here's a simple modular application pattern:
 
 ```javascript
-// 1) Create an application scope...
+// 1) Create an application scope and pod instance...
 (function() {
-	"use strict";
+	var p = new Pod();
 	
 	// 2) Define all application modules...
-	Pod.define("module1", function() {
+	p.define("module1", function() {
 		return {};
 	});
 	
-	Pod.define("module2", function() {
+	p.define("module2", function() {
 		return {};
 	});
 	
-	// 3) Define a "main" module for bootstrapping your application...
-	Pod.define("main", ["module1", "module2"], function( mod1, mod2 ) {
+	// 3) Require components needed to launch the application...
+	p.require(["module1", "module2"], function( mod1, mod2 ) {
 		// Launch application!
 	});
-	
-	// 4) Require "main" to run your application.
-	Pod.require("main");
 }());
 ```
 
 ## declare()
 
-The `declare` method is a convenient way to quickly define one or more modules without dependencies. When using `declare`, exported functions will be preserved rather than being used as factories. Use this method to safely declare third-party libraries as defined resources.
+The `declare` method is a convenient way to quickly define one or more object literals. When using `declare`, functions will be treated as export objects rather than factory functions. Use this method to safely declare third-party libraries as defined resources.
 
 ```javascript
-Pod.declare( "moduleId", exports );
-// OR:
 Pod.declare( exportsMap );
+// OR:
+Pod.declare( "moduleId", exports );
 ```
 
+- `exportsMap` : *Required*. An object with key-value pairs mapping multiple module ids to their related export objects.
 - `"moduleId"` : *Required*. Unique string identifier for the declared module.
 - `exports` : *Required*. An export object for the module. The provided object will be set as the module's definitive export value; functions provided as the export will be preserved rather than being used as the module's factory function.
-
-OR:
-
-- `exportsMap` : *Required*. An object with key-value pairs mapping multiple module ids to their related export objects.
 
 The complete usage of `declare` allows:
 
 ```javascript
+var p = new Pod();
+
 // 1) Declare any object type as a module export.
-Pod.declare("message", "Hello World!");
-Pod.declare("data", {});
+p.declare("message", "Hello World!");
+p.declare("data", {});
 
 // 2) Safely declare functions/libraries as module exports.
 // (note that the root jQuery object is a *function*...)
-Pod.declare("jquery", $);
+p.declare("jquery", $);
 
 // 3) Declare multiple exports as a map of key-value pairs.
-Pod.declare({
+p.declare({
 	"backbone": Backbone,
 	"jquery": $,
 	"underscore": _
 });
 ```
 
-Why `declare` third-party libraries rather than `define`? jQuery is a great example: the root jQuery object is actually a function. In order to `define` the jQuery function, we'd need to wrap it in a factory function that exports it. The `declare` method does this for us, like so:
+Why `declare` third-party libraries rather than using `define`? jQuery is a great example: the root jQuery object is actually a function. In order to `define` jQuery, we'd need to wrap it in a factory function that would export it. The `declare` method does this for us, like so:
 
 ```javascript
 Pod.define("jquery", function() {
@@ -153,24 +153,26 @@ var module = Pod.require( ["moduleId"], callbackFunction? );
 The complete usage of `require` allows:
 
 ```javascript
+var p = new Pod();
+
 // 1) Return a single module by direct id reference.
-var module = Pod.require('module1');
+var module = p.require('module1');
 
 // 2) Inject a single module as an argument of a callback function.
-Pod.require('module1', function( mod1 ) {
+p.require('module1', function( mod1 ) {
 	// do stuff.
 });
 
 // 3) Return an array of modules mapped to a list of required ids.
-var moduleArray = Pod.require(['module1', 'module2']);
+var moduleArray = p.require(['module1', 'module2']);
 
 // 4) Inject a collection of modules as arguments of a callback function.
-Pod.require(['module1', 'module2'], function( mod1, mod2 ) {
+p.require(['module1', 'module2'], function( mod1, mod2 ) {
 	// do stuff.
 });
 
 // 5) OR, do all of the above... return AND inject one or more modules with a single require call.
-var returned = Pod.require(['module1', 'module2'], function( mod1, mod2 ) {
+var moduleArray = p.require(['module1', 'module2'], function( mod1, mod2 ) {
 	// do stuff.
 });
 ```
