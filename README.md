@@ -37,7 +37,7 @@ The complete usage of `define` allows:
 var p = new Pod();
 
 // 1) Define a module with a plain exports object.
-p.define("module", {data: "hello world"});
+p.define("module", {});
 
 // 2) Define a module with a factory function.
 p.define("module1", function() {
@@ -61,10 +61,10 @@ p.require("main");
 While listing module dependencies, you may include `"pod"` as an identifier to have the managing Pod instance provide a reference to itself:
 
 ```javascript
-var myPod = new Pod();
+var p = new Pod();
 
-myPod.require(["pod"], function(pod) {
-	console.log(pod === myPod); // true
+p.require(["pod"], function( pod ) {
+	console.log(pod === p); // true
 });
 ```
 
@@ -179,3 +179,9 @@ var moduleArray = p.require(['module1', 'module2'], function( mod1, mod2 ) {
 ```
 
 Which came first, the chicken or the egg? Pods do not care to figure it out, so they'll throw an exception when a circular reference is required. Avoid circular references; you should be rethinking your organization anyway if you encounter this problem.
+
+## Notes
+
+- Support for elevating MMD/Pods methods to global scope has been officially deprecated as of version 2. Pods are specifically intended to be used as instances.
+
+- Happy building, and have fun!
